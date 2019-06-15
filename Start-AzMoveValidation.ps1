@@ -55,26 +55,29 @@ function Start-AzMoveValidation {
         $currentAzureContext = Get-AzContext
         $azureRmProfile = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile
         $profileClient = New-Object Microsoft.Azure.Commands.ResourceManager.Common.RMProfileClient($azureRmProfile)
-        $token = $profileClient.AcquireAccessToken($currentAzureContext.Subscription.TenantId).AccessToken | ConvertTo-SecureString -AsPlainText -Force
+        $token = $profileClient.AcquireAccessToken($currentAzureContext.Subscription.TenantId).AccessToken
 
         #Creates body with resouces and targets
         $body = @{
-            "resources"           = @($azResources.ResourceId)
-            "targetResourceGroup" = "/subscriptions/$TargetSubscriptionId/resourceGroups/$TargetResourceGroup"
+            resources           = @($azResources.ResourceId)
+            targetResourceGroup = "/subscriptions/$TargetSubscriptionId/resourceGroups/$TargetResourceGroup"
         } | ConvertTo-Json
+
+        $header = @{
+            authorization = "Bearer $token"
+        }
 
         #Creates params to invoke webrequest
         $postParams = @{
-            Method         = 'Post'
-            Uri            = "https://management.azure.com/subscriptions/$SourceSubscriptionId/resourceGroups/$SourceResourceGroup/validateMoveResources?api-version=2019-05-01"
-            Body           = $body
-            Authentication = 'Oauth'
-            Token          = $token
-            ContentType    = 'Application/json'
+            Method      = 'Post'
+            Uri         = "https://management.azure.com/subscriptions/$SourceSubscriptionId/resourceGroups/$SourceResourceGroup/validateMoveResources?api-version=2019-05-01"
+            Body        = $body
+            ContentType = 'Application/json'
+            Headers     = $header
         }
 
         #Posts resources for move validation
-        $post = Invoke-WebRequest @postParams
+        $post = Invoke-WebRequest @postParams -UseBasicParsing
 
         #Assigns variable to location url where we get validation result
         $location = $post.Headers.Location
@@ -83,7 +86,7 @@ function Start-AzMoveValidation {
             try {
                 
                 #Gets validation result
-                $get = Invoke-WebRequest -Method 'Get' -Uri "$location" -Authentication 'OAuth' -Token $token
+                $get = Invoke-WebRequest -Method 'Get' -Uri "$location" -Headers $header -UseBasicParsing
 
             } catch {
 
