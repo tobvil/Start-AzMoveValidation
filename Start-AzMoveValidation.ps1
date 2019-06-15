@@ -63,7 +63,7 @@ function Start-AzMoveValidation {
             "targetResourceGroup" = "/subscriptions/$TargetSubscriptionId/resourceGroups/$TargetResourceGroup"
         } | ConvertTo-Json
 
-        #Creates params from invoke webrequest
+        #Creates params to invoke webrequest
         $postParams = @{
             Method         = 'Post'
             Uri            = "https://management.azure.com/subscriptions/$SourceSubscriptionId/resourceGroups/$SourceResourceGroup/validateMoveResources?api-version=2019-05-01"
