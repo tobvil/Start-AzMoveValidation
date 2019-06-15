@@ -9,7 +9,7 @@
 # EXAMPLE
    Start-AzMoveValidation -TargetSubscriptionId 'SubscriptionId' -TargetResourceGrup 'Resource group name' -SourceSubscriptionId 'SubscriptionId' -SourceResourceGroup 'Resource group name' -SourceTenantId 'TenantId'
 
-# Output Example
+# Output
 Move operation validated successfully
 
 Or
