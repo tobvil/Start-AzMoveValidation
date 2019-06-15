@@ -6,10 +6,13 @@
 # DESCRIPTION
    This function checks whether the specified resources can be moved to the target. The resources to move must be in the same source resource group. The target resource group may be in a different subscription.
 
+# COMPATIBILITY
+   Works with Windows PowerShell 5.1 and PowerShell 7.0
+
 # EXAMPLE
    Start-AzMoveValidation -TargetSubscriptionId 'SubscriptionId' -TargetResourceGrup 'Resource group name' -SourceSubscriptionId 'SubscriptionId' -SourceResourceGroup 'Resource group name' -SourceTenantId 'TenantId'
 
-# Output
+# OUTPUT
 Move operation validated successfully
 
 Or
