@@ -43,8 +43,13 @@ function Start-AzMoveValidation {
             Install-Module -Name Az -Force -AllowClobber -Scope 'CurrentUser'
         }
         
+        #checks if session to subscription already exists
+        $null = $azContext = Get-AzContext
+        
         #Connects to Azure
+        if (!([string]$azContext.Subscription -eq $SourceSubscriptionId) -and (!([string]$azContext.Tenant -eq $SourceTenantId))) {
         $null = Connect-AzAccount -SubscriptionId $SourceSubscriptionId -TenantId $SourceTenantId
+        }
     }
     process {
 
