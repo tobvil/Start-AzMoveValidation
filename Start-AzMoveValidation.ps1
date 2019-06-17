@@ -114,9 +114,5 @@ function Start-AzMoveValidation {
 
     }
     end {
-
-        #Disconnects from Azure
-        $null = Disconnect-AzAccount
-
     }
 }
